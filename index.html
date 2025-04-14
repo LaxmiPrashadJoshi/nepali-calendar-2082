@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>नेपाली पात्रो - लाइव</title>
+  <style>
+    body {
+      font-family: 'Mukta', sans-serif;
+      background-color: #f7f7f7;
+      text-align: center;
+      padding-top: 20px;
+    }
+    canvas {
+      border: 2px solid #4b0082;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+  </style>
+</head>
+<body>
+
+  <h1>नेपाली पात्रो - लाइव</h1>
+  <canvas id="calendarCanvas" width="900" height="600"></canvas>
+
+  <script>
+    const canvas = document.getElementById("calendarCanvas");
+    const ctx = canvas.getContext("2d");
+
+    // Example Data for Vaishakh 2082
+    const nepaliDates = [
+      { date: 1, tithi: "चैत शुक्ल पूर्णिमा", chadparv: "नयाँ वर्ष", gregorian: "April 14, 2025" },
+      { date: 2, tithi: "वैशाख कृष्ण प्रतिपदा", chadparv: "", gregorian: "April 15, 2025" },
+      { date: 3, tithi: "वैशाख कृष्ण द्वितीया", chadparv: "", gregorian: "April 16, 2025" },
+      { date: 4, tithi: "वैशाख कृष्ण तृतीया", chadparv: "", gregorian: "April 17, 2025" },
+      { date: 5, tithi: "वैशाख कृष्ण चतुर्थी", chadparv: "", gregorian: "April 18, 2025" },
+      { date: 6, tithi: "वैशाख कृष्ण पञ्चमी", chadparv: "", gregorian: "April 19, 2025" },
+      { date: 7, tithi: "वैशाख कृष्ण षष्ठी", chadparv: "", gregorian: "April 20, 2025" },
+      { date: 8, tithi: "वैशाख कृष्ण सप्तमी", chadparv: "", gregorian: "April 21, 2025" },
+      { date: 9, tithi: "वैशाख कृष्ण अष्टमी", chadparv: "", gregorian: "April 22, 2025" },
+      { date: 10, tithi: "वैशाख कृष्ण नवमी", chadparv: "", gregorian: "April 23, 2025" },
+      { date: 11, tithi: "वैशाख कृष्ण दशमी", chadparv: "", gregorian: "April 24, 2025" },
+      { date: 12, tithi: "वैशाख कृष्ण एकादशी", chadparv: "", gregorian: "April 25, 2025" },
+      { date: 13, tithi: "वैशाख कृष्ण द्वादशी", chadparv: "", gregorian: "April 26, 2025" },
+      { date: 14, tithi: "वैशाख कृष्ण त्रयोदशी", chadparv: "", gregorian: "April 27, 2025" },
+      { date: 15, tithi: "वैशाख कृष्ण चतुर्दशी", chadparv: "", gregorian: "April 28, 2025" },
+      { date: 16, tithi: "वैशाख कृष्ण पूर्णिमा", chadparv: "", gregorian: "April 29, 2025" }
+    ];
+
+    // Get current date in Gregorian format
+    const today = new Date();
+    const currentDay = today.getDate();
+    const currentMonth = today.getMonth() + 1;  // Months are zero-indexed
+    const currentYear = today.getFullYear();
+
+    // Function to draw the calendar
+    function drawCalendar() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      const startX = 50;
+      const startY = 80;
+      const cellWidth = 120;
+      const cellHeight = 120;
+      const numDays = 16;  // Number of days in Vaishakh month (you can adjust if necessary)
+
+      // Draw the title
+      ctx.fillStyle = "#4b0082";
+      ctx.font = "30px Mukta";
+      ctx.fillText(`वैशाख २०८२`, canvas.width / 2 - 100, 50);
+
+      // Days of the week (header row)
+      const weekdays = ["आइत", "सोम", "मंगल", "बुध", "बिही", "शुक्र", "शनि"];
+      for (let i = 0; i < weekdays.length; i++) {
+        ctx.fillStyle = "#4b0082";
+        ctx.font = "20px Mukta";
+        ctx.fillText(weekdays[i], startX + i * cellWidth, startY - 20);
+      }
+
+      // Draw the days with dynamic content
+      let x = startX;
+      let y = startY;
+
+      for (let i = 0; i < numDays; i++) {
+        const day = nepaliDates[i];
+        const chadparvText = day.chadparv ? day.chadparv : "-";
+        
+        // Draw each cell
+        ctx.fillStyle = "#fff";
+        ctx.fillRect(x, y, cellWidth, cellHeight);
+        ctx.strokeStyle = "#4b0082";
+        ctx.strokeRect(x, y, cellWidth, cellHeight);
+
+        // Add the date number
+        ctx.fillStyle = "#4b0082";
+        ctx.font = "24px Mukta";
+        ctx.fillText(day.date, x + 10, y + 30);
+
+        // Highlight today's date
+        if (day.date === currentDay) {
+          ctx.fillStyle = "red";
+          ctx.font = "24px Mukta";
+          ctx.fillText(day.date, x + 10, y + 30);
+        }
+
+        // Add Tithi and festival info
+        ctx.fillStyle = "#000";
+        ctx.font = "16px Mukta";
+        ctx.fillText(day.tithi, x + 10, y + 60);
+        ctx.fillText(chadparvText, x + 10, y + 90);
+        ctx.fillText(day.gregorian, x + 10, y + 110);
+
+        // Move to the next cell
+        x += cellWidth;
+        if (x + cellWidth > canvas.width) {
+          x = startX;
+          y += cellHeight;
+        }
+      }
+    }
+
+    // Draw the calendar on page load
+    drawCalendar();
+  </script>
+
+</body>
+</html>
