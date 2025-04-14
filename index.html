@@ -3,123 +3,192 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>नेपाली पात्रो - लाइव</title>
+  <title>नेपाली पात्रो 2082</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Khand:wght@500&family=Mukta:wght@600&display=swap" rel="stylesheet">
   <style>
     body {
+      background-color: #fdfaf6;
       font-family: 'Mukta', sans-serif;
-      background-color: #f7f7f7;
-      text-align: center;
-      padding-top: 20px;
     }
-    canvas {
-      border: 2px solid #4b0082;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    .calendar td {
+      height: 100px;
+      vertical-align: top;
+      font-size: 22px;
+      padding: 5px;
+      background-color: #fff;
+      transition: background-color 0.3s;
+      font-family: 'Khand', sans-serif;
+    }
+    .calendar td:hover {
+      background-color: #e7f3ff;
+      cursor: pointer;
+    }
+    .table-bordered th {
+      background-color: #ffefd5;
+      color: #333;
+      text-align: center;
+      font-size: 24px;
+      font-family: 'Khand', sans-serif;
+    }
+    .calendar td strong {
+      display: block;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      line-height: 36px;
+      text-align: center;
+      margin: auto;
+      font-size: 22px;
+    }
+    .calendar .saturday strong {
+      background-color: #f8d7da;
+      color: #b02a37;
+    }
+    .calendar td:not(.saturday) strong {
+      background-color: #e1f5c4;
+      color: #2e7d32;
+    }
+    .btn-primary {
+      background-color: #8e44ad;
+      border-color: #8e44ad;
+    }
+    .btn-primary:hover {
+      background-color: #732d91;
+    }
+    h1 {
+      color: #c0392b;
+      font-family: 'Khand', sans-serif;
+    }
+    .month-box {
+      background-color: #f0e9ff;
+      border: 2px solid #b197fc;
+      border-radius: 15px;
+      padding: 10px 25px;
+      margin: 10px auto;
+      display: inline-block;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      color: #4b0082;
+      font-size: 28px;
+      font-family: 'Khand', sans-serif;
+    }
+    footer {
+      background-color: #f0f0f0;
+      padding: 10px;
+      text-align: center;
+      color: #666;
+      margin-top: 40px;
+      font-family: 'Mukta', sans-serif;
     }
   </style>
 </head>
 <body>
 
-  <h1>नेपाली पात्रो - लाइव</h1>
-  <canvas id="calendarCanvas" width="900" height="600"></canvas>
+<div class="container my-5 text-center">
+  <h1 class="mb-4">नेपाली पात्रो</h1>
 
-  <script>
-    const canvas = document.getElementById("calendarCanvas");
-    const ctx = canvas.getContext("2d");
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <button class="btn btn-primary" onclick="prevMonth()">⬅ अघिल्लो</button>
+    <div id="monthName" class="month-box"></div>
+    <button class="btn btn-primary" onclick="nextMonth()">अर्को ➡</button>
+  </div>
 
-    // Example Data for Vaishakh 2082
-    const nepaliDates = [
-      { date: 1, tithi: "चैत शुक्ल पूर्णिमा", chadparv: "नयाँ वर्ष", gregorian: "April 14, 2025" },
-      { date: 2, tithi: "वैशाख कृष्ण प्रतिपदा", chadparv: "", gregorian: "April 15, 2025" },
-      { date: 3, tithi: "वैशाख कृष्ण द्वितीया", chadparv: "", gregorian: "April 16, 2025" },
-      { date: 4, tithi: "वैशाख कृष्ण तृतीया", chadparv: "", gregorian: "April 17, 2025" },
-      { date: 5, tithi: "वैशाख कृष्ण चतुर्थी", chadparv: "", gregorian: "April 18, 2025" },
-      { date: 6, tithi: "वैशाख कृष्ण पञ्चमी", chadparv: "", gregorian: "April 19, 2025" },
-      { date: 7, tithi: "वैशाख कृष्ण षष्ठी", chadparv: "", gregorian: "April 20, 2025" },
-      { date: 8, tithi: "वैशाख कृष्ण सप्तमी", chadparv: "", gregorian: "April 21, 2025" },
-      { date: 9, tithi: "वैशाख कृष्ण अष्टमी", chadparv: "", gregorian: "April 22, 2025" },
-      { date: 10, tithi: "वैशाख कृष्ण नवमी", chadparv: "", gregorian: "April 23, 2025" },
-      { date: 11, tithi: "वैशाख कृष्ण दशमी", chadparv: "", gregorian: "April 24, 2025" },
-      { date: 12, tithi: "वैशाख कृष्ण एकादशी", chadparv: "", gregorian: "April 25, 2025" },
-      { date: 13, tithi: "वैशाख कृष्ण द्वादशी", chadparv: "", gregorian: "April 26, 2025" },
-      { date: 14, tithi: "वैशाख कृष्ण त्रयोदशी", chadparv: "", gregorian: "April 27, 2025" },
-      { date: 15, tithi: "वैशाख कृष्ण चतुर्दशी", chadparv: "", gregorian: "April 28, 2025" },
-      { date: 16, tithi: "वैशाख कृष्ण पूर्णिमा", chadparv: "", gregorian: "April 29, 2025" }
-    ];
+  <div class="table-responsive">
+    <table class="table table-bordered calendar">
+      <thead class="table-light">
+        <tr>
+          <th>आइत</th>
+          <th>सोम</th>
+          <th>मंगल</th>
+          <th>बुध</th>
+          <th>बिही</th>
+          <th>शुक्र</th>
+          <th>शनि</th>
+        </tr>
+      </thead>
+      <tbody id="calendarBody"></tbody>
+    </table>
+  </div>
+</div>
 
-    // Get current date in Gregorian format
-    const today = new Date();
-    const currentDay = today.getDate();
-    const currentMonth = today.getMonth() + 1;  // Months are zero-indexed
-    const currentYear = today.getFullYear();
+<footer>
+  © लक्ष्मीप्रसाद जोशी
+</footer>
 
-    // Function to draw the calendar
-    function drawCalendar() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
-      const startX = 50;
-      const startY = 80;
-      const cellWidth = 120;
-      const cellHeight = 120;
-      const numDays = 16;  // Number of days in Vaishakh month (you can adjust if necessary)
+<script>
+  const months = [
+    { name: "बैशाख", days: 31 },
+    { name: "जेठ", days: 31 },
+    { name: "असार", days: 32 },
+    { name: "श्रावण", days: 31 },
+    { name: "भदौ", days: 31 },
+    { name: "आश्विन", days: 30 },
+    { name: "कार्तिक", days: 30 },
+    { name: "मंसिर", days: 29 },
+    { name: "पौष", days: 29 },
+    { name: "माघ", days: 30 },
+    { name: "फाल्गुण", days: 30 },
+    { name: "चैत्र", days: 30 }
+  ];
 
-      // Draw the title
-      ctx.fillStyle = "#4b0082";
-      ctx.font = "30px Mukta";
-      ctx.fillText(`वैशाख २०८२`, canvas.width / 2 - 100, 50);
+  let currentMonth = 0;
 
-      // Days of the week (header row)
-      const weekdays = ["आइत", "सोम", "मंगल", "बुध", "बिही", "शुक्र", "शनि"];
-      for (let i = 0; i < weekdays.length; i++) {
-        ctx.fillStyle = "#4b0082";
-        ctx.font = "20px Mukta";
-        ctx.fillText(weekdays[i], startX + i * cellWidth, startY - 20);
-      }
+  const nepaliNumbers = ["०", "१", "२", "३", "४", "५", "६", "७", "८", "९"];
 
-      // Draw the days with dynamic content
-      let x = startX;
-      let y = startY;
+  function toNepali(num) {
+    return num.toString().split('').map(d => nepaliNumbers[parseInt(d)]).join('');
+  }
 
-      for (let i = 0; i < numDays; i++) {
-        const day = nepaliDates[i];
-        const chadparvText = day.chadparv ? day.chadparv : "-";
-        
-        // Draw each cell
-        ctx.fillStyle = "#fff";
-        ctx.fillRect(x, y, cellWidth, cellHeight);
-        ctx.strokeStyle = "#4b0082";
-        ctx.strokeRect(x, y, cellWidth, cellHeight);
+  function renderCalendar(monthIndex) {
+    const month = months[monthIndex];
+    document.getElementById('monthName').textContent = `${month.name} २०८२`;
 
-        // Add the date number
-        ctx.fillStyle = "#4b0082";
-        ctx.font = "24px Mukta";
-        ctx.fillText(day.date, x + 10, y + 30);
+    const tbody = document.getElementById('calendarBody');
+    tbody.innerHTML = "";
 
-        // Highlight today's date
-        if (day.date === currentDay) {
-          ctx.fillStyle = "red";
-          ctx.font = "24px Mukta";
-          ctx.fillText(day.date, x + 10, y + 30);
+    const firstDay = new Date(2025, monthIndex, 1).getDay();
+    let date = 1;
+    let weeks = Math.ceil((firstDay + month.days) / 7);
+
+    for (let i = 0; i < weeks; i++) {
+      let row = document.createElement("tr");
+
+      for (let j = 0; j < 7; j++) {
+        let cell = document.createElement("td");
+
+        if (i === 0 && j < firstDay) {
+          cell.innerHTML = "";
+        } else if (date <= month.days) {
+          const isSaturday = j === 6;
+          cell.className = isSaturday ? "saturday" : "";
+          cell.innerHTML = `<strong>${toNepali(date)}</strong>`;
+          date++;
+        } else {
+          cell.innerHTML = "";
         }
 
-        // Add Tithi and festival info
-        ctx.fillStyle = "#000";
-        ctx.font = "16px Mukta";
-        ctx.fillText(day.tithi, x + 10, y + 60);
-        ctx.fillText(chadparvText, x + 10, y + 90);
-        ctx.fillText(day.gregorian, x + 10, y + 110);
-
-        // Move to the next cell
-        x += cellWidth;
-        if (x + cellWidth > canvas.width) {
-          x = startX;
-          y += cellHeight;
-        }
+        row.appendChild(cell);
       }
+      tbody.appendChild(row);
     }
+  }
 
-    // Draw the calendar on page load
-    drawCalendar();
-  </script>
+  function nextMonth() {
+    if (currentMonth < 11) {
+      currentMonth++;
+      renderCalendar(currentMonth);
+    }
+  }
+
+  function prevMonth() {
+    if (currentMonth > 0) {
+      currentMonth--;
+      renderCalendar(currentMonth);
+    }
+  }
+
+  renderCalendar(currentMonth);
+</script>
 
 </body>
 </html>
